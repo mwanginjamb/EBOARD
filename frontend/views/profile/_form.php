@@ -13,7 +13,7 @@ $action = \Yii::$app->controller->action->id;
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-10 col-md-offset-1">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title"><?= ($action == 'create')?'Create Profile':'Update Profile'?></h3>
@@ -21,6 +21,19 @@ $action = \Yii::$app->controller->action->id;
             <div class="box-body">
                 <div class="message"></div>
                 <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
+
+                <?= $form->field($model, 'title')->dropDownList(
+                    ArrayHelper::map(\frontend\models\Title::find()->all(),'id','title'),
+                    ['prompt'=>'Users Title']
+                ) ?>
+
+                <?= $form->field($model, 'first_name')->textInput(['class'=>'form-control']) ?>
+
+                <?= $form->field($model, 'middle_name')->textInput(['class'=>'form-control']) ?>
+
+                <?= $form->field($model, 'last_name')->textInput(['class'=>'form-control']) ?>
+
+                <?= $form->field($model, 'cell_number')->textInput(['class'=>'form-control']) ?>
 
                 <?= $form->field($model, 'user_id')->hiddenInput(['value'=>$identity->getId()])->label(false) ?>
 
@@ -33,7 +46,15 @@ $action = \Yii::$app->controller->action->id;
                     ],
                 ]) ?>
 
-                <?= $form->field($model, 'designation')->textInput() ?>
+                <?php //$form->field($model, 'designation')->textInput() ?>
+
+                 <?= $form->field($model, 'designation')->dropDownList(
+                                                            [
+                                                            'Administrator'=>'Administrator',
+                                                            'User'=>'User',
+                                                            'Commissioner' => 'Commissioner'
+                                                        ],
+                                                            ['prompt'=>'Choose Designation']); ?>
 
                 <?= $form->field($model, 'file')->fileInput(['class'=>'form-control']) ?>
 

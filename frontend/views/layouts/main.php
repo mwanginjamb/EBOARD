@@ -28,8 +28,8 @@ Modal::end();
 if(Yii::$app->user->isGuest){
     //echo 'not logged int';exit;
 }
-//$image = 'https://via.placeholder.com/160x160?text=user pic.';
-if(!\Yii::$app->user->isGuest):
+$image = 'https://via.placeholder.com/160x160?text=user pic.';
+if(!\Yii::$app->user->isGuest && is_object($identity->profile)):
 $image = is_file('./profile/'.$identity->profile->avatar)?'/profile/'.$identity->profile->avatar:'https://via.placeholder.com/160x160?text=user pic.';
 endif;
 ?>
@@ -86,8 +86,8 @@ endif;
                                 <img src="<?= $image ?>" class="img-circle" alt="User Image">
 
                                 <p>
-                                    <?= $identity->profile->designation ?>
-                                    <small>Granted Access since : <?= $identity->profile->created_at ?></small>
+                                    <?= (is_object($identity->profile)?$identity->profile->designation:'Designation not set'); ?>
+                                    <small>Granted Access since : <?= (is_object($identity->profile))?$identity->profile->created_at:'N/A'; ?></small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
@@ -108,7 +108,11 @@ endif;
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
+                                    <?php if(is_object($identity->profile)): ?>
                                     <a href="/profile/view?id=<?= $identity->profile->id ?>" class="btn btn-default btn-flat">Profile</a>
+                                    <?php else: ?>
+                                        <a href="/profile/create" class="btn btn-default btn-flat">Create Profile</a>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="pull-right">
                                     <a href="/site/logout" class="btn btn-default btn-flat">Sign out</a>
@@ -124,32 +128,40 @@ endif;
             </div>
         </nav>
     </header>
+    <?php if(!Yii::$app->user->isGuest && isset( $identity->profile->designation) && $identity->profile->designation === 'Administrator'): ?>
     <aside class="main-sidebar">
         <section class="sidebar">
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-laptop"></i>
-                        <span>Admin Setups</span>
+                        <span>Admin Setups </span>
                         <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
                     </a>
                     <ul class="treeview-menu">
-
-                        <li><?= Html::a('<i class="fa fa-folder-o"></i>&nbsp;&nbsp;Parent Folders',['/parent-document-type'],['target'=>'_blank']) ?></li>
+                        
+                        <li><?=  Html::a('<i class="fa fa-folder-o"></i>&nbsp;&nbsp;Committee Folders',['/parent-document-type'],['target'=>'_blank']) ?></li>
                         <li><?= Html::a('<i class="fa fa-folder"></i>&nbsp;&nbsp;Sub-folders',['/child-document-types'],['target'=>'_blank']) ?></li>
+                        <li><?= Html::a('<i class="fa fa-folder"></i>&nbsp;&nbsp;File Manager',['/documents/manage'],['target'=>'_blank','title'=>'Manage Files']) ?></li>
                         <li><?= Html::a('<i class="fa fa-file-pdf-o"></i>&nbsp;&nbsp;Upload Documents',['/documents/create'],['target'=>'_blank']) ?></li>
-                        <li><?= Html::a('<i class="fa fa-users"></i>&nbsp;&nbsp;Manage Users',['/users'],['target'=>'_blank']) ?></li>
+                        <li><?= Html::a('<i class="fa fa-users"></i>&nbsp;&nbsp;Manage Users',['/profile/index'],['target'=>'_blank']) ?></li>
+                        <?= (!\Yii::$app->user->isGuest == 'administrator')?'<li>'.Html::a('<i class="fa fa-users"></i>&nbsp;&nbsp;Add/Signup User',['/site/signup'],['target'=>'_blank']).'</li>':'' ?>
                         <li><?= Html::a('<i class="fa fa-users"></i>&nbsp;&nbsp;User Types',['/user-type'],['target'=>'_blank']) ?></li>
+                        <?= (!\Yii::$app->user->isGuest == 'administrator')?'<li>'.Html::a('<i class="fa fa-calendar"></i>&nbsp;&nbsp;Event Calendar',['/calendar/index'],['target'=>'_blank']).'</li>':'' ?>
 
+                        <?= (!\Yii::$app->user->isGuest == 'administrator')?'<li>'.Html::a('<i class="fa fa-map"></i>&nbsp;&nbsp;Event Venues',['/venue/index'],['target'=>'_blank']).'</li>':'' ?>
+
+
+                        
 
                     </ul>
                 </li>
             </ul>
         </section>
     </aside>
-
+<?php endif; ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <section class="content-header">

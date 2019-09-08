@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-12 col-md-offset-0">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Define a Top Level Directory</h3>

@@ -79,16 +79,32 @@ class ChildDocumentTypesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($folder="")
     {
         $model = new ChildDocumentTypes();
+        $model->status = 1;//initiaize subfolder status to active 
+        $model->created_at = date('m-d-Y H:i:s');
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->created_at = date('m-d-Y H:i:s');
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+            if(isset($folder)){
+                $parentfolder = \frontend\models\ParentDocumentType::findOne($folder);
+                $folderName = $parentfolder->title;
+                Yii::$app->session->setFlash('success', 'Subfolder <u>'.$model->title.'</u> Created Successfully in <b>'.$folderName.'</b> .');
+                return $this->redirect(['site/index']);
+            }
+            return $this->redirect(['view','id'=>$model->id]);
+            
         }
 
+
+        if(\Yii::$app->request->isAjax){//if create is invoked via ajax request then initiaize folder id
+            $model->parent_id = $folder;
+            return $this->renderAjax('create',[
+                'model'=>$model,
+            ]);
+        }
+        
         return $this->render('create', [
             'model' => $model,
         ]);

@@ -7,13 +7,18 @@ use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ChildDocumentTypes */
 /* @var $form yii\widgets\ActiveForm */
+ $folderName = 'Parent Folder';
+if(isset($model->parent_id)){
+    $parentfolder = \frontend\models\ParentDocumentType::findOne($model->parent_id);
+    $folderName = $parentfolder->title;
+}
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-12 col-md-offset-0">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Add a Sub-Folder</h3>
+                <h3 class="box-title">Add a <b><i><?= ucwords($folderName) ?></i></b> Sub-Folder </h3>
 
             </div>
             <div class="box-body">

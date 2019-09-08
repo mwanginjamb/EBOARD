@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\filters\AccessControl;
 
 /**
  * DocumentsController implements the CRUD actions for Documents model.
@@ -25,6 +26,22 @@ class DocumentsController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['logout', 'signup','index','manage','create','update','delete'],
+                'rules' => [
+                    [
+                        'actions' => ['signup'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['logout','index','manage','create','update','delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
         ];
@@ -63,7 +80,7 @@ class DocumentsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($parent="",$subfolder="")
     {
         $this->enableCsrfValidation = false;
         $identity = \Yii::$app->user->identity;
@@ -74,23 +91,20 @@ class DocumentsController extends Controller
 
             $docs = UploadedFile::getInstances($model,'files');
             foreach($docs as $doc){
-                /* print($_POST['Documents']['parent_document_id']).'<br />';
-                print($_POST['Documents']['child_document_id']).'<br />';
-                print($_POST['Documents']['status']).'<br />';exit;*/
-                //print $parent.'<br />'; exit;
+                
                 $model = new Documents();
-                $model->parent_document_id = $_POST['Documents']['parent_document_id'];
-                $model->child_document_id = $_POST['Documents']['child_document_id'];
+                $model->parent_document_id = isset($parent)?$parent:$_POST['Documents']['parent_document_id'];
+                $model->child_document_id = isset($subfolder)?$subfolder:$_POST['Documents']['child_document_id'];
                 $model->created_at = date('m-d-Y H:i:s');
-                $model->updated_at = date('m-d-Y H:i:s');
-                $model->title = str_replace(" ", "_", $doc->name);
+                $model->updated_at = date('m-d-Y H:i:s');//should be commented
+                $model->title = str_replace(' ','_', trim($doc->name));
                 $model->size = $doc->size;
                 $model->document_type = $doc->type;
                 $model->created_by = $identity->username;
-                $model->path = $path.'\\'.$doc->name;
+                $model->path = $path.'\\'.str_replace(' ','_', trim($doc->name));
                 $model->status = $_POST['Documents']['status'];
-                $doc->saveAs($path.'\\'. $doc->name);
-                $model->save();
+                $doc->saveAs($path.'\\'. str_replace(' ','_', trim($doc->name));
+                //$model->save();
             }
             if($model->save()){
                 Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -102,6 +116,16 @@ class DocumentsController extends Controller
             //return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        if(\Yii::$app->request->isAjax){ //for ajax requests initialize some variables
+            $model->parent_document_id = $parent;
+            $model->child_document_id = $subfolder;
+            $model->status = 1;
+            return $this->renderAjax('create',[
+                'model'=>$model,
+                'parent'=>$parent,
+                'subfolder'=>$subfolder
+            ]);
+        }
 
         return $this->render('create', [
             'model' => $model,
@@ -115,11 +139,30 @@ class DocumentsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id,$action='')
     {
         $model = $this->findModel($id);
+        $model->updated_at = date('m-d-Y H:i:s');
+        if($action == 'restore'){
+            $model->status = 1;
+            if($model->save()){
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return['message'=>1,'note'=>'<div class="alert alert-success">Document Restored Successfully.</div>'];//Update Successfully
+            }else{
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return['message'=>0,'note'=>'<div class="alert alert-danger">Problem Restoring Document.</div>'];//Update Successfully
+            }
+        }
+        if ($model->load(Yii::$app->request->post()) && $action !== 'restore') {
 
-        if ($model->load(Yii::$app->request->post())) {
+            //update file name
+            if(\Yii::$app->request->post('title')){
+                $oldfile = '.\documents\\'.$model->title;
+                $newfile = '.\documents\\'.\Yii::$app->request->post('title');
+                rename($oldfile,$newfile);
+            }
+
+
             if($model->save()){
                 Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 return['message'=>1,'note'=>'<div class="alert alert-success">Document Updated Successfully.</div>'];//Update Successfully
@@ -155,6 +198,17 @@ class DocumentsController extends Controller
         }
 
         //return $this->redirect(['index']);
+    }
+    public function actionManage(){
+        $archived = Documents::find()->where(['status'=>0])->all();
+        $documents = Documents::find()->where(['NOT','documents.status=0'])->joinWith('parentDocument')->joinWith('childDocument')->asArray()->all();
+
+        /*print '<pre>';
+        print_r($documents);*/
+       return  $this->render('manage',[
+            'archived'=>$archived,
+            'documents'=>$documents,
+        ]);
     }
 
     /**

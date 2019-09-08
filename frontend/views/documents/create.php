@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Documents */
 
-$this->title = 'Create Documents';
+$this->title = 'Upload  Documents';
 $this->params['breadcrumbs'][] = ['label' => 'Documents', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'parent'=>isset($parent)?$parent:'',
+        'subfolder'=>isset($subfolder)?$subfolder:'',
     ]) ?>
 
 </div>

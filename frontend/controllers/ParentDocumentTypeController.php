@@ -97,9 +97,15 @@ class ParentDocumentTypeController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->created_at = date('m-d-Y H:i:s');
             $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+             Yii::$app->session->setFlash('success', 'Folder <u><b>'.$model->title.'</b></u> Created Successfully, remember to assign yourself access rights to it on <a href="../profile/index">user management</a> .');
+                return $this->redirect(['site/index']);
         }
-
+        if(\Yii::$app->request->isAjax){
+            $model->status = 1;
+            $model->user_type_ids = 1;
+            return $this->renderAjax('create',['model'=>$model]);
+        }
         return $this->render('create', [
             'model' => $model,
         ]);

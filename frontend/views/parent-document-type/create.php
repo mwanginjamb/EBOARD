@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ParentDocumentType */
 
-$this->title = 'Create Parent Document Type';
+$this->title = 'Create a Folder';
 $this->params['breadcrumbs'][] = ['label' => 'Parent Document Types', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

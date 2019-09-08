@@ -40,6 +40,7 @@ class Documents extends \yii\db\ActiveRecord
             [['parent_document_id', 'child_document_id', 'size', 'status'], 'integer'],
             [['title', 'document_type', 'path', 'created_by', 'updated_by'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
+            [['files'],'file','maxFiles'=>30,'extensions'=>'pdf'],
         ];
     }
 
@@ -50,8 +51,8 @@ class Documents extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'parent_document_id' => 'Parent Document ID',
-            'child_document_id' => 'Child Document ID',
+            'parent_document_id' => 'Parent Folder',
+            'child_document_id' => 'Sub-Folder',
             'size' => 'Size',
             'title' => 'Title',
             'status' => 'Status',
@@ -62,5 +63,11 @@ class Documents extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
+    }
+    public function getParentDocument(){
+        return $this->hasOne(ParentDocumentType::className(),['id'=>'parent_document_id']);
+    }
+    public function getChildDocument(){
+        return $this->hasOne(ChildDocumentTypes::className(),['id'=>'child_document_id']);
     }
 }

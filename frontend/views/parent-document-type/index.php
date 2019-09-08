@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\ParentDocumentTypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Parent Document Types';
+$this->title = 'Committe Folders';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="parent-document-type-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Parent Document Type', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create a Committe Folder', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             'title',
             //'size',
-            'updated_at',
+            //'updated_at',
             'created_at',
             //'creator',
             //'status',

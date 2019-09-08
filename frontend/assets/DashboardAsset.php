@@ -29,7 +29,8 @@ class DashboardAsset extends AssetBundle
         'css/dragula.css',
         'css/radio.css',
         'css/themes/metro/easyui.css',
-        'css/themes/icon.css'
+        'css/themes/icon.css',
+        'css/plugins/timepicker/bootstrap-timepicker.css',
         //'css/demo.css'
 
 
@@ -43,6 +44,7 @@ class DashboardAsset extends AssetBundle
         'bower_components/jquery-sparkline/dist/jquery.sparkline.min.js',
         'css/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js',
         'css/plugins/jvectormap/jquery-jvectormap-world-mill-en.js',
+        'css/plugins/timepicker/bootstrap-timepicker.js',
         'bower_components/jquery-knob/dist/jquery.knob.min.js',
         'bower_components/moment/min/moment.min.js',
         'bower_components/bootstrap-daterangepicker/daterangepicker.js',

@@ -3,6 +3,7 @@ namespace frontend\models;
 
 use yii\base\Model;
 use common\models\User;
+//use yii\validators\CompareValidator;
 
 /**
  * Signup form
@@ -12,6 +13,7 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $confirm_password;
 
 
     /**
@@ -33,6 +35,10 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+
+            ['confirm_password','required'],
+            ['confirm_password','compare','compareAttribute'=>'password','message'=>'Passwords do not match, try again'],
+
         ];
     }
 

@@ -50,8 +50,8 @@ class ChildDocumentTypes extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'parent_id' => 'Parent ID',
-            'title' => 'Folder Name',
+            'parent_id' => 'Parent Folder',
+            'title' => 'Sub Folder Name',
             'size' => 'Size',
             'created_at' => 'Created At',
             'update_at' => 'Update At',

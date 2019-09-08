@@ -13,7 +13,7 @@ $action = \Yii::$app->controller->action->id;
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-12 col-md-offset-0">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title"><?= ($action == 'create')?'Upload Documents':'Update Document'?></h3>
@@ -24,16 +24,13 @@ $action = \Yii::$app->controller->action->id;
                 <?= ($action == 'update')?$form->field($model, 'title')->textInput():'' ?>
                 <?= $form->field($model, 'parent_document_id')->dropDownList(
                     ArrayHelper::map(\frontend\models\ParentDocumentType::find()->all(),'id','title'),
-                    ['prompt'=>'Parent Folder']
-                ) ?>
+                    ['prompt'=>'Parent Folder'])
+                     ?>
 
                 <?= $form->field($model, 'child_document_id')->dropDownList(
                     ArrayHelper::map(\frontend\models\ChildDocumentTypes::find()->all(),'id','title'),
-                    ['prompt'=>'Sub Folder']
-                ) ?>
-
-                <?php //$form->field($model, 'size')->textInput() ?>
-
+                    ['prompt'=>'Sub Folder'])
+                    ?>
 
 
                 <?= ($action !== 'update')?$form->field($model,'files[]')->widget(FileInput::className(),
@@ -45,12 +42,7 @@ $action = \Yii::$app->controller->action->id;
 
                 <?= $form->field($model, 'status')->dropDownList(['0'=>'InActive','1'=>'Active'],['prompt'=>'Document Status']) ?>
 
-                <?php //$form->field($model, 'created_at')->textInput() ?>
-
-                <?php //$form->field($model, 'updated_at')->textInput() ?>
-
-                <?php //$form->field($model, 'document_type')->textInput() ?>
-
+               
                 <div class="form-group">
                     <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
                 </div>
