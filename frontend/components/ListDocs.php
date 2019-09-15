@@ -31,11 +31,11 @@ class ListDocs extends Component
     public function cummulativesize($folderid){
         $query = (new Query())->from('documents')->where(['parent_document_id'=>$folderid,'documents.status'=>1]);
         $totalsize = $query->sum('size');
-        return number_format($totalsize/1024);
+        return number_format($totalsize/1024);//size in kilobytes
     }
     public function subfoldersize($subfolderid){
         $query = (new Query())->from('documents')->where(['child_document_id'=>$subfolderid,'documents.status'=>1]);
         $totalsize = $query->sum('size');
-        return number_format($totalsize/1024);
+        return number_format($totalsize/1024);//size in kilobytes
     }
 }
