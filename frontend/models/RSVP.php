@@ -12,6 +12,7 @@ use Yii;
  * @property int $RSVPStatusID
  * @property string $CreatedAt
  * @property string $UpdatedAt
+  *@property string $ProfileID
  */
 class RSVP extends \yii\db\ActiveRecord
 {
@@ -29,7 +30,7 @@ class RSVP extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CalenderID', 'RSVPStatusID'], 'integer'],
+            [['CalendarID', 'RSVPStatusID','ProfileID'], 'integer'],
             [['CreatedAt', 'UpdatedAt'], 'safe'],
         ];
     }
@@ -41,10 +42,22 @@ class RSVP extends \yii\db\ActiveRecord
     {
         return [
             'RSVPID' => 'Rsvpid',
-            'CalenderID' => 'Calender ID',
+            'CalendarID' => 'Calender ID',
             'RSVPStatusID' => 'Rsvpstatus ID',
             'CreatedAt' => 'Created At',
             'UpdatedAt' => 'Updated At',
         ];
+    }
+
+    public function getProfile(){
+      return $this->hasOne(Profile::className(), ['id' => 'ProfileID']);
+    }
+
+     public function getRsvp(){
+      return $this->hasOne(RSVPStatus::className(), ['id' => 'RSVPStatusID']);
+    }
+
+    public function getEvent(){
+      return $this->hasOne(Calendar::className(),['id'=> 'CalendarID']);
     }
 }

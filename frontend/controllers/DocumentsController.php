@@ -103,7 +103,7 @@ class DocumentsController extends Controller
                 $model->created_by = $identity->username;
                 $model->path = $path.'\\'.str_replace(' ','_', trim($doc->name));
                 $model->status = $_POST['Documents']['status'];
-                $doc->saveAs($path.'\\'. str_replace(' ','_', trim($doc->name));
+                $doc->saveAs($path.'\\'. str_replace(' ','_', trim($doc->name)));
                 //$model->save();
             }
             if($model->save()){

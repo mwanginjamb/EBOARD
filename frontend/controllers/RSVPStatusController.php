@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * RSVPStatusController implements the CRUD actions for RSVPStatus model.
  */
-class RSVPStatusController extends Controller
+class RsvpStatusController extends Controller
 {
     /**
      * {@inheritdoc}

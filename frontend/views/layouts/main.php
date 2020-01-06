@@ -56,7 +56,7 @@ endif;
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>ERC E-Board</span>
+            <span class="logo-lg"><b> E-Board</span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -185,9 +185,9 @@ endif;
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; ERC E-Board <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+        <p class="pull-left">&copy;  E-Board <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right"><?= Yii::signature() ?></p>
     </div>
 </footer>
 

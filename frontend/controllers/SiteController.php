@@ -8,6 +8,8 @@ use frontend\models\Documents;
 use frontend\models\ParentDocumentType;
 use frontend\models\Profile;
 use frontend\models\User;
+use frontend\models\RSVPStatus;
+use frontend\models\RSVP;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\data\ActiveDataProvider;
@@ -26,6 +28,7 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use yii\helpers\Json;
 use yii\web\Response;
+
 
 /**
  * Site controller
@@ -63,7 +66,7 @@ class SiteController extends Controller
             ],
             'contentNegotiator' =>[
                 'class' => ContentNegotiator::className(),
-                'only' => ['docs','folders','subfolders','files','mobauth','addannotation','listannotations','events','userannotations','deleteannotation'],
+                'only' => ['docs','folders','subfolders','files','mobauth','addannotation','listannotations','events','userannotations','deleteannotation','rsvp','rsvp-status'],
                 'formatParam' => '_format',
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -203,6 +206,43 @@ class SiteController extends Controller
         $annotations = Annotation::find()->where(['documentTitle'=>$docTitle,'creator'=>$username,'status'=>NULL])->asArray()->all();
         return ['results'=>$annotations];
     }
+
+    //get rsvp status 
+
+    public function actionRsvpStatus(){
+        $rsvpStatus = RSVPStatus::find()->asArray()->all();
+        return ['results'=>$rsvpStatus];
+    }
+
+    //post RSVP status
+
+    public function actionRsvp(){
+
+
+        $ProfileID = Yii::$app->request->get('ProfileID');
+        $CalendarID = Yii::$app->request->get('CalendarID');
+
+        $checkRsvp = RSVP::find()->
+                    where(['CalendarID'=>$CalendarID,'ProfileID'=>$ProfileID])->
+                    one();
+        if($checkRsvp && is_object($checkRsvp)){
+            $model = $checkRsvp;
+        }else{
+            $model = new RSVP();
+        }
+        
+
+        $model->ProfileID =  $ProfileID  ;
+        $model->CalendarID = $CalendarID ;
+        $model->RSVPStatusID = Yii::$app->request->get('RSVPStatusID');
+        if($model->save()){
+            return ['results'=>['status'=> 1]];
+        }
+        else{
+            return ['results'=>['status'=> $model->getErrors()]];
+        }
+    }
+
 
     //delete annotation
     public function actionDeleteannotation($id){
@@ -447,7 +487,6 @@ class SiteController extends Controller
         $file_name = end($parts);//get last part of the array which is the actual file namespace
         $path = '.\documents\\'.$file_name;
 
-        //exit($path);
         //magic line
         return \Yii::$app->response->sendFile($path,$title,['inline'=>true]);
     }

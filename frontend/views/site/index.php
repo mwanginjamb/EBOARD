@@ -118,14 +118,17 @@ $identity = \Yii::$app->user->identity;
 
                                         //list($meta,$mime) = explode('/',$d['document_type']);
                                         $size = number_format(($d['size']/1024));
+                                        $document_path_parts = explode('\\',$d['path']);
+                                        $doc_name = end($document_path_parts);
+
                                         print '<tr>
-                                                              <td><a class="view-doc" target="_blank" href="/site/viewdoc?path='.$d['path'].'&title='.$d['title'].'" rel="'.$d['title'].'" title="View / Read Document"><i class="fa fa-file-pdf-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;'.$d['title'].'</a></td> 
+                                                              <td><a class="view-doc" target="_blank" href="/site/viewdoc?path='.$doc_name.'&title='.$d['title'].'" rel="'.$d['title'].'" title="View / Read Document"><i class="fa fa-file-pdf-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;'.$d['title'].'</a></td> 
                                                                <td>'.$size.' Kb</td> 
                                                                <td>'.($d['parentDocument']['title']??'Not Set').'</td>
                                                                <td>'.$d['document_type'].'</td> 
                                                                <td>'.$d['created_at'].'</td> 
                                                                <td>'.ucwords($d['created_by']).'</td> 
-                                                               <td><a class="view-doc" target="_blank" href="/site/viewdoc?path='.$d['path'].'&title='.$d['title'].'" rel="'.$d['title'].'" title="View / Read Document"><i class="fa fa-eye"></i></a></td>';
+                                                               <td><a class="view-doc" target="_blank" href="/site/viewdoc?path='.$doc_name.'&title='.$d['title'].'" rel="'.$d['title'].'" title="View / Read Document"><i class="fa fa-eye"></i></a></td>';
 
 
    if(!Yii::$app->user->isGuest && isset( $identity->profile->designation) && $identity->profile->designation === 'Administrator'):
