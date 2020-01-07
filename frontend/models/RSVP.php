@@ -54,7 +54,7 @@ class RSVP extends \yii\db\ActiveRecord
     }
 
      public function getRsvp(){
-      return $this->hasOne(RSVPStatus::className(), ['id' => 'RSVPStatusID']);
+      return $this->hasOne(RSVPStatus::className(), ['RSVPStatusID' => 'RSVPStatusID']);
     }
 
     public function getEvent(){

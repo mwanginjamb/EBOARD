@@ -19,7 +19,7 @@ Modal::end();
 /* @var $searchModel frontend\models\CalendarSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'ERC Events Calendar';
+$this->title = 'E-Board Events Calendar';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="calendar-index">
@@ -58,11 +58,15 @@ $this->params['breadcrumbs'][] = $this->title;
     echo '<ul class="timeline">';
     foreach ($events as $e){
 
-
-
+       
         //format date
         $date = date('Y M d', strtotime($e['scheduled_date']));
 
+        $timing = calcto($e['scheduled_date']);       
+
+        $phrase = (strstr($timing,'-')== false)?'&nbsp;Happens in : ':'&nbsp;<span style="color:red">Happened </span>';
+
+        $rsvp = ($model->getRsvpCount($e['id']))?Html::a('Rsvp ('.$model->getRsvpCount($e['id']).')',['rsvp','id'=>$e['id']],['class'=>'pull-right btn-xs btn-success']):'';
 
         echo ' <!-- timeline time label -->
     <li class="time-label">
@@ -90,8 +94,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="timeline-footer">
                 <a class="btn btn-warning btn-xs"><strong>Venue:</strong> '.$e['venue']['venue'].'</a>
-                <span class="time" class="pull-right bg-danger"> <i class="fa fa-clock-o "></i>Happens in : '.calcto($e['scheduled_date']).'</span>
+                <span class="time" class="pull-right bg-danger"> <i class="fa fa-clock-o "></i>'.$phrase.' in : '.$timing.'</span>
 
+                '.$rsvp.'
             </div>
         </div>
     </li>

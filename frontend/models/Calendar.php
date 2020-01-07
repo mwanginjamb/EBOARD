@@ -64,4 +64,16 @@ class Calendar extends \yii\db\ActiveRecord
     public function getVenue(){
         return $this->hasOne(Venue::className(),['id'=>'venue']);
     }
+
+    public function getRsvpCount($id){
+        $rsvps = RSVP::find()->where(['CalendarID'=>$id])
+        ->joinWith('profile')
+        ->joinWith('rsvp')
+        ->joinWith('event')
+        ->count();
+
+        return $rsvps;
+
+
+    }
 }

@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\Calendar;
 use frontend\models\CalendarSearch;
+use frontend\models\RSVP;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -31,7 +32,7 @@ class CalendarController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['create', 'update','index','view','update','delete'],
+                        'actions' => ['create', 'update','index','view','update','delete','rsvp'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -53,6 +54,7 @@ class CalendarController extends Controller
     public function actionIndex()
     {
         $searchModel = new CalendarSearch();
+        $model = new Calendar();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $events = Calendar::find()->joinWith('venue')
             ->orderBy(['scheduled_date'=>SORT_DESC])
@@ -65,7 +67,24 @@ class CalendarController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'events'=>$events,
+            'model'=>$model,
         ]);
+    }
+
+    //get rsvp responses
+
+    public function actionRsvp($id){
+        $rsvp = RSVP::find()->where(['CalendarID'=>$id])
+        ->joinWith('profile')
+        ->joinWith('rsvp')
+        ->joinWith('event')
+        ->all();
+
+       /* print '<pre>';
+        print_r($rsvp);
+        exit;*/
+
+        return $this->render('rsvp',['rsvps'=>$rsvp]);
     }
 
     /**
